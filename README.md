@@ -15,3 +15,4 @@ Group Info
 * Lưu Linh Ly (22BI13269)
 * Nguyễn Đức Duy (22BI13120)
 * Lê Viết Hoàng Lâm (22BI13235)
+* Nguyễn Ngọc Nhi (22BI13351)
