@@ -1,0 +1,97 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{breaklines=true, basicstyle=\ttfamily, frame=single}
+
+\begin{document}
+
+\title{06.GlusterFS}
+\date{December 2024}
+\maketitle
+
+\section{Introduction}
+This report outlines 3 tasks:
+\begin{itemize}
+    \item Set up GlusterFS
+    \item Create a distributed replicated volume
+    \item Perform benchmarks (small and large files)
+\end{itemize}
+
+\section{Setup Commands}
+
+\subsection{GlusterFS Installation}
+Install GlusterFS on 2 Virtual Machines:
+\begin{lstlisting}
+sudo apt update
+sudo apt install -y glusterfs-server
+sudo systemctl enable --now glusterd
+\end{lstlisting}
+IP addresses for the VMs:
+\begin{itemize}
+    \item VM 1: 192.168.88.241
+    \item VM 2: 192.168.88.236
+\end{itemize}
+
+\subsection{Creating a Trusted Pool}
+Add nodes to the GlusterFS trusted pool:
+\begin{lstlisting}
+sudo gluster peer probe 192.168.88.236
+sudo gluster peer status
+\end{lstlisting}
+Output:
+\begin{lstlisting}
+Number of Peers: 1
+State: Peer in Cluster (Connected)
+\end{lstlisting}
+
+\subsection{Volume Creation and Start}
+Create a replicated GlusterFS volume:
+\begin{lstlisting}
+sudo gluster volume create volname replica 2 transport tcp \
+192.168.88.241:/data/glusterfs/brick1 \
+192.168.88.236:/data/glusterfs/brick1 force
+\end{lstlisting}
+Output:
+\begin{lstlisting}
+volume create: volname: success: please start the volume to access data
+\end{lstlisting}
+Start the replicated GlusterFS volume:
+\begin{lstlisting}
+sudo gluster volume start volname
+\end{lstlisting}
+
+\section{Perform Benchmarks}
+
+\subsection{Small Files}
+\begin{lstlisting}
+fio --name=smallfile --directory=/mnt/glusterfs --rw=randwrite --bs=4k \
+--size=10M --numjobs=4 --time_based --runtime=30 --group_reporting
+\end{lstlisting}
+Results: 
+\begin{lstlisting}
+WRITE: bw=14.4MiB/s (15.1MB/s), io=432MiB (453MB), run=30002msec
+\end{lstlisting}
+\begin{equation}
+\text{IOPS} = \frac{\text{Bandwidth (in KB/s)}}{\text{Block Size (in KB)}} = \frac{14,745.6}{4} = 3686 \text{ IOPS}
+\end{equation}
+So, the system achieved 3686 random write accesses per second with 2 servers.
+
+\subsection{Large Files}
+\begin{lstlisting}
+dd if=/dev/zero of=/mnt/glusterfs/largefile bs=1M count=1000 oflag=direct
+\end{lstlisting}
+Results:
+\begin{lstlisting}
+1048576000 bytes (1.0 GB, 1000 MiB) copied, 8.78928 s, 119 MB/s
+\end{lstlisting}
+The benchmark for large files showed a read speed of 119 MB/s with 2 servers.
+
+\section{Conclusion}
+GlusterFS was successfully set up and tested for basic benchmarks.
+
+\end{document}
