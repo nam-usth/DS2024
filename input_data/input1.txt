@@ -1,0 +1,2 @@
+/Users/hola/hello.py
+/Users/hola/Downloads/course1_session2.ipynb
