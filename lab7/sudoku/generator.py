@@ -7,8 +7,6 @@ class SudokuGenerator:
 
     def generate_sudoku(self):
         """Generates a Sudoku puzzle of a given difficulty."""
-        # Implement your Sudoku generation algorithm here.
-        # Basic backtracking algorithm with difficulty control:
         self.fill_diagonal()
         self.fill_remaining(0, 0)
         self.remove_cells()
