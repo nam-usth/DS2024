@@ -11,5 +11,8 @@ USTH ICT 2024 Distributed Systems
 Group Info
 =======================
 
-* Name 1 (ID1)
-* Name 2 (ID2)
+* Vũ Hải Thiên Long (22BI13268)
+* Lưu Linh Ly (22BI13269)
+* Nguyễn Đức Duy (22BI13120)
+* Lê Viết Hoàng Lâm (22BI13235)
+* Nguyễn Ngọc Nhi (22BI13351)
