@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from sudoku import generator  # Import your Sudoku generation logic
+from sudoku import generator  
 
 app = Flask(__name__)
 
